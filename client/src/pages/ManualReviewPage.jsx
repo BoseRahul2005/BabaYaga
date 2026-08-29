@@ -1,59 +1,69 @@
 import { useState } from "react";
-import { useForm } from "react-hook-form";
+import CodeEditor from "../components/CodeEditor";
+import ReviewForm from "../components/ReviewForm";
 import API from "../api/axios";
+import { Code2 } from "lucide-react";
 
 const ManualReviewPage = () => {
   const [response, setResponse] = useState("");
-  const {
-    register,
-    handleSubmit,
-    watch,
-    formState: { errors, isSubmitting },
-  } = useForm();
-  const onSubmit = async (data) => {
-    let language = "javascript";
-    const code = data.example;
+  const [isReviewing, setIsReviewing] = useState(false);
+
+  const handleReviewCode = async (code, language) => {
+    setIsReviewing(true);
     try {
       const review = await API.post(`/review/review-code/${language}`, {
         code,
       });
-      console.log(review.data.response);
-      setResponse(review.data.response);
+      setResponse(
+        review.data?.response || JSON.stringify(review.data, null, 2),
+      );
     } catch (error) {
-      console.log("Error from backend:", error);
+      console.error("Error from backend:", error);
+      setResponse(
+        `Error processing code review: ${error.message || "Unknown error"}`,
+      );
+    } finally {
+      setIsReviewing(false);
     }
   };
 
   return (
-    <>
-      <h2>Manual AI Code Review Playground</h2>
-      <p>
-        Paste any arbitrary code snippet to perform deep multi-pass AI security
-        & logic analysis on demand.
-      </p>
-      <hr />
+    <div className="min-h-screen bg-[#070a12] text-slate-100 p-4 md:p-8 font-sans">
+      <div className="max-w-[1600px] mx-auto space-y-6">
+        {/* Header */}
+        <header className="space-y-1.5">
+          <h1 className="text-2xl md:text-3xl font-extrabold tracking-tight text-white flex items-center gap-2">
+            <Code2 size={28} color="#4f46e5" strokeWidth={2.5} />
+            Manual AI Code Review Playground
+          </h1>
+          <p className="text-slate-400 text-sm max-w-2xl">
+            Paste any arbitrary code snippet to perform deep multi-pass AI
+            security & logic analysis on demand.
+          </p>
+        </header>
 
-      <form onSubmit={handleSubmit(onSubmit)}>
-        <textarea
-          className="h-64 w-full rounded-md bg-stone-800 text-amber-50 focus:outline-none focus:border-none border-none"
-          placeholder="Paste your code here.."
-          {...register("example")}
-        />
+        {/* Side by Side Layout: Code Editor (Left) & Review Panel (Right) */}
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 items-start">
+          {/* Left Column: Code Editor */}
+          <div className="w-full">
+            <CodeEditor
+              onReviewCode={handleReviewCode}
+              isReviewing={isReviewing}
+              height="580px"
+            />
+          </div>
 
-        <button
-          disabled={isSubmitting}
-          className="bg-stone-800 text-amber-50 cursor-pointer  hover:bg-stone-700"
-        >
-          {isSubmitting ? "Reviewing..." : "Review Code"}
-        </button>
-      </form>
-
-      <div className="border-2 border-amber-950 p-5">
-        <h4 className="font-bold text-2xl mb-5">Recent analysis results</h4>
-        <hr />
-        <p className="text-xl">{response}</p>
+          {/* Right Column: Review Panel */}
+          <div className="w-full">
+            <ReviewForm
+              response={response}
+              isReviewing={isReviewing}
+              height="580px"
+            />
+          </div>
+        </div>
       </div>
-    </>
+    </div>
   );
 };
 
