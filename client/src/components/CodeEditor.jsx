@@ -206,17 +206,17 @@ const CodeEditor = ({
       style={{ minHeight: height }}
     >
       {/* Top Toolbar Header */}
-      <div className="px-5 py-3.5 bg-[#111726] border-b border-[#1b2538] flex flex-wrap items-center justify-between gap-3">
+      <div className="px-4.5 py-3 bg-[#111726] border-b border-[#1b2538] flex items-center justify-between gap-3 overflow-x-auto whitespace-nowrap scrollbar-none">
         {/* Left Side: Language Selector */}
-        <div className="flex items-center gap-2.5">
-          <label className="text-slate-300 font-medium text-sm tracking-wide">
+        <div className="flex items-center gap-3">
+          <label className="text-slate-300 font-medium text-xs tracking-wide">
             Language:
           </label>
           <div className="relative flex items-center">
             <select
               value={language}
               onChange={handleLanguageChange}
-              className="appearance-none bg-[#172033] hover:bg-[#1e2a42] text-slate-200 border border-[#273550] rounded-xl px-3.5 py-1.5 pr-8 text-sm font-medium focus:outline-none focus:border-indigo-500 transition-all cursor-pointer shadow-sm"
+              className="appearance-none bg-[#172033] hover:bg-[#1e2a42] text-slate-200 border border-[#273550] rounded-xl px-2.5 py-1 pr-7 text-xs font-medium focus:outline-none focus:border-indigo-500 transition-all cursor-pointer shadow-sm"
             >
               {LANGUAGES.map((lang) => (
                 <option
@@ -233,22 +233,22 @@ const CodeEditor = ({
         </div>
 
         {/* Right Side: Action Buttons */}
-        <div className="flex items-center gap-2.5">
+        <div className="flex items-center gap-2">
           {/* Paste Code Button */}
           <button
             type="button"
             onClick={handlePasteCode}
-            className="flex items-center gap-2 bg-[#172033] hover:bg-[#1e2a42] active:bg-[#253452] text-slate-200 hover:text-white border border-[#273550] rounded-xl px-3.5 py-1.5 text-sm font-medium transition-all duration-150 cursor-pointer shadow-sm"
+            className="flex items-center gap-2 bg-[#172033] hover:bg-[#1e2a42] active:bg-[#253452] text-slate-200 hover:text-white border border-[#273550] rounded-xl px-2.5 py-1 text-xs font-medium transition-all duration-150 cursor-pointer shadow-sm"
             title="Paste code from clipboard"
           >
             {pasted ? (
               <>
-                <Check className="w-4 h-4 text-emerald-400" />
+                <Check className="w-3 h-3 text-emerald-400" />
                 <span className="text-emerald-400">Pasted!</span>
               </>
             ) : (
               <>
-                <Clipboard className="w-4 h-4 text-slate-400" />
+                <Clipboard className="w-3 h-3 text-slate-400" />
                 <span>Paste Code</span>
               </>
             )}
@@ -258,17 +258,17 @@ const CodeEditor = ({
           <button
             type="button"
             onClick={() => fileInputRef.current?.click()}
-            className="flex items-center gap-2 bg-[#172033] hover:bg-[#1e2a42] active:bg-[#253452] text-slate-200 hover:text-white border border-[#273550] rounded-xl px-3.5 py-1.5 text-sm font-medium transition-all duration-150 cursor-pointer shadow-sm"
+            className="flex items-center gap-2 bg-[#172033] hover:bg-[#1e2a42] active:bg-[#253452] text-slate-200 hover:text-white border border-[#273550] rounded-xl px-2.5 py-1 text-xs font-medium transition-all duration-150 cursor-pointer shadow-sm"
             title="Upload code file"
           >
             {fileLoaded ? (
               <>
-                <Check className="w-4 h-4 text-emerald-400" />
+                <Check className="w-3 h-3 text-emerald-400" />
                 <span className="text-emerald-400">Loaded!</span>
               </>
             ) : (
               <>
-                <Upload className="w-4 h-4 text-slate-400" />
+                <Upload className="w-3 h-3 text-slate-400" />
                 <span>Upload File</span>
               </>
             )}
@@ -286,12 +286,12 @@ const CodeEditor = ({
             type="button"
             onClick={handleReviewClick}
             disabled={isReviewing}
-            className="flex items-center gap-2 bg-linear-to-r from-indigo-600 via-indigo-500 to-purple-600 hover:from-indigo-500 hover:to-purple-500 active:scale-[0.98] text-white font-medium text-sm px-4 py-1.5 rounded-xl shadow-md shadow-indigo-600/25 transition-all duration-150 cursor-pointer disabled:opacity-60 disabled:cursor-not-allowed"
+            className="flex items-center gap-2 bg-linear-to-r from-indigo-600 via-indigo-500 to-purple-600 hover:from-indigo-500 hover:to-purple-500 active:scale-[0.98] text-white font-medium px-2.5 py-1 text-xs rounded-xl shadow-md shadow-indigo-600/25 transition-all duration-150 cursor-pointer disabled:opacity-60 disabled:cursor-not-allowed"
           >
             {isReviewing ? (
-              <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+              <div className="w-3 h-3 border-2 border-white/30 border-t-white rounded-full animate-spin" />
             ) : (
-              <Sparkles className="w-4 h-4 text-indigo-100" />
+              <Sparkles className="w-3.5 h-3.5 text-indigo-100" />
             )}
             <span>{isReviewing ? "Reviewing..." : "Review Code"}</span>
           </button>
@@ -300,13 +300,13 @@ const CodeEditor = ({
 
       {/* Main Code Editor Box */}
       <div
-        className="relative flex w-full bg-[#080c14] font-mono text-sm leading-6"
+        className="relative flex w-full bg-[#080c14] font-mono text-xs leading-6"
         style={{ height }}
       >
         {/* Line Numbers Column */}
         <div
           ref={lineNumbersRef}
-          className="select-none py-4 px-3 text-right text-[#42506b] bg-[#070a11] border-r border-[#151c2d] min-w-13 overflow-hidden"
+          className="select-none py-3 px-2 text-right text-[#42506b] bg-[#070a11] border-r border-[#151c2d] min-w-11 overflow-hidden"
           aria-hidden="true"
         >
           {lineNumbers.map((num) => (
@@ -321,7 +321,7 @@ const CodeEditor = ({
           {/* Syntax Highlighted Display Overlay */}
           <pre
             ref={preRef}
-            className="absolute inset-0 m-0 p-4 overflow-auto pointer-events-none font-mono text-sm leading-6 whitespace-pre tab-2 text-slate-100"
+            className="absolute inset-0 m-0 p-4 overflow-auto pointer-events-none font-mono text-xs leading-6 whitespace-pre tab-2 text-slate-100"
             aria-hidden="true"
             dangerouslySetInnerHTML={{ __html: getHighlightedCode() + "\n" }}
           />
@@ -337,7 +337,7 @@ const CodeEditor = ({
             autoCapitalize="off"
             autoComplete="off"
             autoCorrect="off"
-            className="absolute inset-0 w-full h-full m-0 p-4 bg-transparent text-transparent caret-indigo-300 resize-none font-mono text-sm leading-6 whitespace-pre focus:outline-none tab-2 overflow-auto"
+            className="absolute inset-0 w-full h-full m-0 p-4 bg-transparent text-transparent caret-indigo-300 resize-none font-mono text-xs leading-6 whitespace-pre focus:outline-none tab-2 overflow-auto"
             placeholder="Type or paste your code here..."
           />
         </div>

@@ -1,10 +1,15 @@
-import React from 'react'
-import ManualReviewPage from './pages/ManualReviewPage'
+import { Route, Routes } from "react-router";
+import LandingPage from "./pages/LandingPage";
+import ManualReviewPage from "./pages/ManualReviewPage";
 
 const App = () => {
   return (
-    <ManualReviewPage />
-  )
-}
+    <Routes>
+      <Route path="/" element={<LandingPage />} />
+      <Route path="/manual-review" element={<ManualReviewPage />} />
+    </Routes>
+  );
+};
 
 export default App;
+
