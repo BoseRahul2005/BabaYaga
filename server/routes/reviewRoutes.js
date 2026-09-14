@@ -1,7 +1,7 @@
 const express = require("express");
-const { createReviewService } = require("../services/reviewService");
+const {manualReviewController}=require("../controller/reviewController");
 const reviewRouter = express.Router();
 
-reviewRouter.post("/review-code/:language", createReviewService);
+reviewRouter.post("/review-code/:language",manualReviewController);
 
 module.exports = reviewRouter;

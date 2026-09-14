@@ -1,24 +1,22 @@
 const { getPrompt } = require("./promptService");
 const { callLLM } = require("./llmService");
 
-exports.createReviewService = async (req, res) => {
-    const { code } = req.body;
-    const { language } = req.params;
+exports.manualReviewService = async (code, language) => {
     try {
         if(!code || !language || !(typeof code === 'string')){
-            return res.json({success:false, message:"Invalid input"});
+            return false;
         }
         const prompt=getPrompt(language,code);
         const response=await callLLM(prompt);
 
         if(!response){
-            return res.json({success:false,message:"Something is wrong"});
+            return false;
         }
 
-        return res.json({success:true,response});
+        return response;
         
     }catch(error){
         console.log(error);
-        res.status(500).json({message:"Internal Server Error"});
+        throw error;
     }
 };
