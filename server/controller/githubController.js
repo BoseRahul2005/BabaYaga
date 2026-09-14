@@ -1,4 +1,4 @@
-const {getRepoInfo} = require("../services/githubServices");
+const {getRepoInfo, getFilteredRepoTree} = require("../services/githubServices");
 const {parseGithubUrl} = require("../utils/parseGithubUrl");
 
 exports.gitInfo= async(req,res)=>{
@@ -8,11 +8,12 @@ exports.gitInfo= async(req,res)=>{
             return res.status(400).json({success:false,error:"Invalid Repo URL"})
         }
         const repoData= await getRepoInfo(owner,repo);
+        const filteredTreeData= await getFilteredRepoTree(owner,repo,repoData.default_branch);
         
-        console.log(repoData);
+        console.log(filteredTreeData);
         return res.status(200).json({
             success:true,
-            data:repoData
+            data:filteredTreeData
         })
     }
     catch(err){
