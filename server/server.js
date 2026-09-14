@@ -1,6 +1,7 @@
 require('dotenv').config();
 const express = require('express');
 const reviewRouter= require("./routes/reviewRoutes.js");
+const githubRouter= require("./routes/githubRoutes.js");
 const app = express();
 var cors = require('cors')
 const port= process.env.PORT || 3000;
@@ -15,6 +16,7 @@ app.get('/',(req,res)=>{
 });
 
 app.use('/api/review',reviewRouter);
+app.use('/api/github',githubRouter);
 
 app.listen(port,()=>{
     console.log(`Server started on port ${port}...`);
