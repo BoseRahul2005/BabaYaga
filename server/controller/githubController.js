@@ -1,4 +1,4 @@
-const {getRepoInfo, getFilteredRepoTree} = require("../services/githubServices");
+const {getRepoInfo, getFilteredRepoTree,getFileContent} = require("../services/githubServices");
 const {parseGithubUrl} = require("../utils/parseGithubUrl");
 
 exports.gitInfo= async(req,res)=>{
@@ -19,5 +19,25 @@ exports.gitInfo= async(req,res)=>{
     catch(err){
         console.log(err);
         return res.status(500).json({success:false,error:"Failed to fetch repo info"});
+    }
+}
+
+exports.getSourceCode= async(req,res)=>{
+    try{
+        console.log(req.body);
+        const {owner,repo}=parseGithubUrl(req.body.repoUrl);
+        const {filePath, branch}=req.body;
+        if(!owner||!repo||!filePath||!branch){
+            return res.status(400).json({success:false,error:"Missing or invalid request data!"})
+        }
+        const sourceCode= await getFileContent(owner,repo,branch,filePath);
+        return res.status(200).json({
+            success:true,
+            data:sourceCode
+        })
+    }
+    catch(err){
+        console.log(err);
+        return res.status(500).json({success:false,error:"Failed to fetch Source Code"});
     }
 }

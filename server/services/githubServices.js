@@ -31,3 +31,21 @@ exports.getFilteredRepoTree = async (owner, repo, branch) => {
     throw error;
   }
 }
+
+exports.getFileContent= async(owner,repo,branch,filepath)=>{
+    try{
+        const response = await octokit.request("GET /repos/{owner}/{repo}/contents/{path}", {
+            owner: owner,
+            repo: repo,
+            path: filepath,
+            ref: branch,
+        });
+        const sourceCode= Buffer.from(response.data.content,"base64").toString("utf-8");
+        console.log(sourceCode);
+        return sourceCode;
+    }
+    catch(err){
+        console.log(err);
+        throw err;
+    }
+}
