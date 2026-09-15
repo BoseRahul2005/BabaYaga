@@ -3,18 +3,26 @@ import { useNavigate } from "react-router";
 import CodeEditor from "../components/CodeEditor";
 import ReviewForm from "../components/ReviewForm";
 import Sidebar from "../components/SidePanel";
+import GitHubRepositoryReview from "../components/GitHubRepositoryReview";
 import API from "../api/axios";
 import { Code2 } from "lucide-react";
 
 const ManualReviewPage = () => {
   const [response, setResponse] = useState("");
   const [isReviewing, setIsReviewing] = useState(false);
+  const [editorCode, setEditorCode] = useState(undefined);
+  const [editorLanguage, setEditorLanguage] = useState(undefined);
   const navigate = useNavigate();
 
   const handleSetTab = (tab) => {
     if (tab === "landing") {
       navigate("/");
     }
+  };
+
+  const handleSelectGithubFile = ({ code, language }) => {
+    setEditorCode(code);
+    setEditorLanguage(language);
   };
 
   const handleReviewCode = async (code, language) => {
@@ -51,16 +59,24 @@ const ManualReviewPage = () => {
               Manual AI Code Review Playground
             </h1>
             <p className="text-slate-400 text-sm max-w-2xl">
-              Paste any arbitrary code snippet to perform deep multi-pass AI
-              security & logic analysis on demand.
+              Paste any arbitrary code snippet or fetch directly from a public GitHub repository to perform deep multi-pass AI security & logic analysis on demand.
             </p>
           </header>
+
+          {/* GitHub Repository Review Section */}
+          <GitHubRepositoryReview onSelectFile={handleSelectGithubFile} />
 
           {/* Side by Side Layout: Code Editor (Left) & Review Panel (Right) */}
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 items-start">
             {/* Left Column: Code Editor */}
             <div className="w-full">
               <CodeEditor
+                value={editorCode}
+                language={editorLanguage}
+                onChange={(newCode, newLang) => {
+                  setEditorCode(newCode);
+                  setEditorLanguage(newLang);
+                }}
                 onReviewCode={handleReviewCode}
                 isReviewing={isReviewing}
                 height="580px"
@@ -83,4 +99,3 @@ const ManualReviewPage = () => {
 };
 
 export default ManualReviewPage;
-

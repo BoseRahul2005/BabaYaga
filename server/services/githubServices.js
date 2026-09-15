@@ -7,7 +7,6 @@ exports.getRepoInfo = async (owner, repo) => {
       owner: owner,
       repo: repo,
     });
-    console.log(response.data);
 
     return response.data;
   } catch (error) {
@@ -41,7 +40,6 @@ exports.getFileContent= async(owner,repo,branch,filepath)=>{
             ref: branch,
         });
         const sourceCode= Buffer.from(response.data.content,"base64").toString("utf-8");
-        console.log(sourceCode);
         return sourceCode;
     }
     catch(err){

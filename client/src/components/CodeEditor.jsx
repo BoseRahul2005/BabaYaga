@@ -1,4 +1,4 @@
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import { Sparkles, Clipboard, Upload, Check, ChevronDown } from "lucide-react";
 import Prism from "prismjs";
 
@@ -69,15 +69,29 @@ const fallbackHighlight = (code) => {
 
 const CodeEditor = ({
   initialLanguage = "javascript",
+  value,
+  language: propLanguage,
   onReviewCode,
   isReviewing = false,
   onChange,
   height = "520px",
 }) => {
-  const [code, setCode] = useState("Type or paste your code here...");
-  const [language, setLanguage] = useState(initialLanguage);
+  const [code, setCode] = useState(value ?? "Type or paste your code here...");
+  const [language, setLanguage] = useState(propLanguage ?? initialLanguage);
   const [pasted, setPasted] = useState(false);
   const [fileLoaded, setFileLoaded] = useState(false);
+
+  useEffect(() => {
+    if (value !== undefined) {
+      setCode(value);
+    }
+  }, [value]);
+
+  useEffect(() => {
+    if (propLanguage !== undefined) {
+      setLanguage(propLanguage);
+    }
+  }, [propLanguage]);
 
   const textareaRef = useRef(null);
   const preRef = useRef(null);
@@ -206,9 +220,9 @@ const CodeEditor = ({
       style={{ minHeight: height }}
     >
       {/* Top Toolbar Header */}
-      <div className="px-4.5 py-3 bg-[#111726] border-b border-[#1b2538] flex items-center justify-between gap-3 overflow-x-auto whitespace-nowrap scrollbar-none">
+      <div className="px-4.5 py-3 bg-[#111726] border-b border-[#1b2538] flex  justify-between gap-3 overflow-x-auto whitespace-nowrap scrollbar-none">
         {/* Left Side: Language Selector */}
-        <div className="flex items-center gap-3">
+        <div className="flex items-center gap-3 ">
           <label className="text-slate-300 font-medium text-xs tracking-wide">
             Language:
           </label>

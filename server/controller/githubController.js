@@ -10,7 +10,6 @@ exports.gitInfo= async(req,res)=>{
         const repoData= await getRepoInfo(owner,repo);
         const filteredTreeData= await getFilteredRepoTree(owner,repo,repoData.default_branch);
         
-        console.log(filteredTreeData);
         return res.status(200).json({
             success:true,
             data:filteredTreeData
@@ -24,7 +23,6 @@ exports.gitInfo= async(req,res)=>{
 
 exports.getSourceCode= async(req,res)=>{
     try{
-        console.log(req.body);
         const {owner,repo}=parseGithubUrl(req.body.repoUrl);
         const {filePath, branch}=req.body;
         if(!owner||!repo||!filePath||!branch){

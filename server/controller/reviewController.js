@@ -1,13 +1,13 @@
-const {manualReviewService} = require("../services/reviewService");
+const {reviewService} = require("../services/reviewService");
 
-exports.manualReviewController = async (req,res)=>{
+exports.reviewController = async (req,res)=>{
     try{
         const {code}=req.body;
         const {language}=req.params;
         if(!code || !language){
             return res.status(400).json({success:false,message:"Missing or invalid request data!"})
         }
-        const response=await manualReviewService(code,language);
+        const response=await reviewService(code,language);
         if(!response){
             return res.status(400).json({success:false,message:"Failed to create review!"})
         }

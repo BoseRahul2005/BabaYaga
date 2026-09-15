@@ -1,7 +1,7 @@
 const { getPrompt } = require("./promptService");
 const { callLLM } = require("./llmService");
 
-exports.manualReviewService = async (code, language) => {
+exports.reviewService = async (code, language) => {
     try {
         if(!code || !language || !(typeof code === 'string')){
             return false;

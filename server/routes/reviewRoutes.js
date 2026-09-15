@@ -1,7 +1,7 @@
 const express = require("express");
-const {manualReviewController}=require("../controller/reviewController");
+const {reviewController}=require("../controller/reviewController");
 const reviewRouter = express.Router();
 
-reviewRouter.post("/review-code/:language",manualReviewController);
+reviewRouter.post("/review-code/:language",reviewController);
 
 module.exports = reviewRouter;
