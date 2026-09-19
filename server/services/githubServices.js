@@ -62,3 +62,20 @@ exports.getPullRequestFiles= async(owner, repo, prNumber)=>{
         throw err;
     }
 }
+
+exports.getPRFileContent= async(owner,repo,filepath,sha)=>{
+    try{
+        const response = await octokit.request("GET /repos/{owner}/{repo}/contents/{path}", {
+            owner: owner,
+            repo: repo,
+            path: filepath,
+            ref: sha,
+        });
+        const sourceCode= Buffer.from(response.data.content,"base64").toString("utf-8");
+        return sourceCode;
+    }
+    catch(err){
+        console.log(err);
+        throw err;
+    }
+}
