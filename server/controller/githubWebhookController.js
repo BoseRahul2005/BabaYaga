@@ -8,6 +8,8 @@ const { normalizePRFiles } = require("../utils/normalizePullRequestFiles");
 const { reviewableInput } = require("../utils/buildPRReviewInput");
 const { extractChangedLines } = require("../utils/extractChangedLines");
 const { extractSourceContext } = require("../utils/extractSourceContext");
+const {getPRReviewPrompt} = require("../services/promptService.js");
+const {callLLM} = require("../services/llmService.js");
 exports.webhookController = async (req, res) => {
   try {
     const event = req.headers["x-github-event"];
@@ -39,19 +41,28 @@ exports.webhookController = async (req, res) => {
         return { ...inputs, context: sourceContext[idx] };
       });
 
-      inputsToLLM.forEach((input) => {
-        console.log(input.filePath);
-        console.log("\n\n\n");
-        console.log(input.diff);
-        console.log("\n\n\n");
-        console.log(input.context);
-        console.log("=====================================================================\n\n\n");
+      const prReviewPrompt = inputsToLLM.map((input) => {
+        return getPRReviewPrompt(input);
+      });
+
+      const reviewedFiles = await Promise.all(
+        prReviewPrompt.map((prompt) => {
+          return callLLM(prompt);
+        }),
+      );
+      res.status(200).json({
+        success: true,
+        message: "Webhook received successfully",
+        response: reviewedFiles
       });
     }
-    return res.status(200).json({
-      success: true,
-      message: "Webhook received successfully",
-    });
+    else {
+      res.status(200).json({
+        success: true,
+        message: "Webhook received successfully",
+        response: "Not a pull request event"
+      });
+    }
   } catch (err) {
     console.log(err);
     res.status(500).json({
