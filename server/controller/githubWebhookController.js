@@ -1,4 +1,5 @@
 const {parseEvent} = require("../utils/parsePullRequestEvent");
+const {getPullRequestFiles} = require("../services/githubServices");
 exports.webhookController= async(req,res)=>{
     try{
         const event= req.headers["x-github-event"];
@@ -7,12 +8,10 @@ exports.webhookController= async(req,res)=>{
         console.log(action);
         if(event === "pull_request"){
             const {owner, repo, sha, prNumber, branch} = parseEvent(req.body);
-            console.log("owner: ",owner);
-            console.log("repo: ",repo);
-            console.log("sha: ",sha);
-            console.log("prNumber: ",prNumber);
-            console.log("branch: ",branch);
-            
+            const files= await getPullRequestFiles(owner, repo, prNumber);
+            files.forEach(file => {
+                console.log(file);
+            });
         }
         return res.status(200).json({
             success:true,

@@ -47,3 +47,18 @@ exports.getFileContent= async(owner,repo,branch,filepath)=>{
         throw err;
     }
 }
+
+exports.getPullRequestFiles= async(owner, repo, prNumber)=>{
+    try{
+        const response = await octokit.request("GET /repos/{owner}/{repo}/pulls/{pull_number}/files", {
+            owner: owner,
+            repo: repo,
+            pull_number: prNumber
+        });
+        return response.data;
+    }
+    catch(err){
+        console.log(err);
+        throw err;
+    }
+}
