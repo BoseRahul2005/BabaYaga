@@ -10,6 +10,9 @@ const { extractChangedLines } = require("../utils/extractChangedLines");
 const { extractSourceContext } = require("../utils/extractSourceContext");
 const {getPRReviewPrompt} = require("../services/promptService.js");
 const {callLLM} = require("../services/llmService.js");
+const {parseResponse} = require("../utils/parseReviewResponse.js");
+const {validateReviewResponse} = require("../utils/validateReviewResponse.js");
+
 exports.webhookController = async (req, res) => {
   try {
     const event = req.headers["x-github-event"];
@@ -50,10 +53,19 @@ exports.webhookController = async (req, res) => {
           return callLLM(prompt);
         }),
       );
+
+      const parsedResponse = reviewedFiles.map((response) => {
+        return parseResponse(response);
+      });
+
+      const validatedResponse = parsedResponse.map((response) => {
+        return validateReviewResponse(response);
+      })
+
       res.status(200).json({
         success: true,
         message: "Webhook received successfully",
-        response: reviewedFiles
+        response: validatedResponse
       });
     }
     else {

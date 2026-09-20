@@ -67,7 +67,7 @@ Do NOT report:
 * Issues unrelated to the changed lines
 * Existing problems in unchanged code unless they directly interact with the changed code and cause the pull request to introduce or expose a bug
 * Speculative issues without reasonable evidence
-* Suggestions that merely make the code "cleaner" without fixing a concrete problem
+* Suggestions that merely make the code cleaner without fixing a concrete problem
 
 The surrounding source context is provided only to help you understand how the changed code interacts with the rest of the file.
 
@@ -77,27 +77,34 @@ Only report an issue when you are reasonably confident that the changed code int
 
 Do not report something merely because it could theoretically be improved.
 
-For every issue, explain:
+For every issue:
 
-1. What the problem is.
-2. Why it can cause incorrect behavior.
-3. Under what condition the problem occurs.
-4. How the developer can fix it.
+1. Identify the concrete problem.
+2. Explain why it can cause incorrect behavior.
+3. Explain the condition under which the problem occurs.
+4. Provide a concise and actionable fix.
 
-Keep comments concise, specific, and actionable.
+Every reported issue must reference a changed line whenever possible.
 
-Avoid generic advice.
+The line number must correspond to a line that was added or modified in the pull request diff.
 
-Every reported issue should reference the relevant changed line whenever possible.
+Do not report an unchanged line as the primary issue location unless the changed code directly causes that unchanged line to fail.
 
-Use one of these severity levels:
+Use exactly one of these severity values:
 
-* critical — can cause severe security vulnerabilities, data loss, system compromise, or major production failures
-* high — can cause significant incorrect behavior, security problems, crashes, or major reliability issues
-* medium — can cause bugs or incorrect behavior under realistic conditions
-* low — a real but limited issue with relatively small impact
+* critical
+* high
+* medium
+* low
 
-Use one of these categories when applicable:
+Severity meanings:
+
+* critical — severe security vulnerability, data loss, system compromise, or major production failure
+* high — significant incorrect behavior, security issue, crash, or major reliability problem
+* medium — bug or incorrect behavior under realistic conditions
+* low — real issue with limited impact
+
+Use exactly one of these categories:
 
 * bug
 * security
@@ -109,30 +116,57 @@ Use one of these categories when applicable:
 * validation
 * reliability
 
-Return the review in structured JSON using this format:
-Do not include markdown, code fences, explanations, or any text outside the JSON object.
+You MUST return valid JSON.
+
+Do not return Markdown.
+
+Do not use code fences.
+
+Do not include explanations before or after the JSON.
+
+Do not include comments inside the JSON.
+
+Do not include trailing commas.
+
+The response must follow exactly this structure:
 
 {
+"summary": "A concise summary of the review result.",
 "issues": [
 {
 "file": "path/to/file.js",
 "line": 42,
 "severity": "high",
 "category": "bug",
-"message": "Clear explanation of the problem.",
-"reason": "Explain why this causes incorrect behavior and when it can happen.",
-"suggestion": "Describe how the developer should fix the problem."
+"title": "Short descriptive title",
+"explanation": "Clear explanation of the concrete problem and why it causes incorrect behavior.",
+"suggestion": "Concise description of how the developer should fix the problem."
 }
 ]
 }
 
-If no meaningful issues are found, return:
+Rules for the response:
+
+* "summary" must always be present.
+* "issues" must always be an array.
+* "file" must exactly match the file currently being reviewed.
+* "line" must be a number.
+* "line" should reference a changed line whenever possible.
+* "severity" must be one of: critical, high, medium, low.
+* "category" must be one of: bug, security, logic, error-handling, performance, api-contract, concurrency, validation, reliability.
+* "title" must be short and specific.
+* "explanation" must describe the actual problem and when it occurs.
+* "suggestion" must describe a concrete fix.
+* Do not add fields that are not defined in the required structure.
+* Do not omit required fields.
+* Do not invent issues just to produce feedback.
+
+If no meaningful issues are found, return exactly this structure:
 
 {
+"summary": "No meaningful issues were found in the changed code.",
 "issues": []
 }
-
-Do not invent issues just to produce feedback.
 
 A pull request with no issues is a valid review result.
 
@@ -143,13 +177,15 @@ Your goal is to identify only issues that a developer would genuinely want to fi
 Review the following pull request file:
 
 FILE:
+
 ${input.filePath}
 
 CHANGED CODE:
+
 ${input.diff}
 
 SURROUNDING SOURCE CONTEXT:
-${input.context}
 
+${input.context}
   `
 }
