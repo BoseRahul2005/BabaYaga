@@ -1,6 +1,6 @@
 const { Octokit } = require("octokit");
 
 const octokit = new Octokit({
-  auth: process.env.BREVO_API_KEY,
+  auth: process.env.GITHUB_TOKEN,
 });
 module.exports = {octokit};
