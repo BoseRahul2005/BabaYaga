@@ -79,3 +79,19 @@ exports.getPRFileContent= async(owner,repo,filepath,sha)=>{
         throw err;
     }
 }
+
+exports.createPullRequestComment= async(owner,repo,prNumber,body)=>{
+    try{
+        const response = await octokit.request("POST /repos/{owner}/{repo}/issues/{issue_number}/comments", {
+            owner: owner,
+            repo: repo,
+            issue_number: prNumber,
+            body: body
+        });
+        return response.data;
+    }
+    catch(err){
+        console.log(err);
+        throw err;
+    }
+}

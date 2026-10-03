@@ -8,10 +8,14 @@ const { normalizePRFiles } = require("../utils/normalizePullRequestFiles");
 const { reviewableInput } = require("../utils/buildPRReviewInput");
 const { extractChangedLines } = require("../utils/extractChangedLines");
 const { extractSourceContext } = require("../utils/extractSourceContext");
-const {getPRReviewPrompt} = require("../services/promptService.js");
-const {callLLM} = require("../services/llmService.js");
-const {parseResponse} = require("../utils/parseReviewResponse.js");
-const {validateReviewResponse} = require("../utils/validateReviewResponse.js");
+const { getPRReviewPrompt } = require("../services/promptService.js");
+const { callLLM } = require("../services/llmService.js");
+const { parseResponse } = require("../utils/parseReviewResponse.js");
+const {
+  validateReviewResponse,
+} = require("../utils/validateReviewResponse.js");
+const { formatReview } = require("../utils/formatGithubReview.js");
+const { createPullRequestComment } = require("../services/githubServices.js");
 
 exports.webhookController = async (req, res) => {
   try {
@@ -60,26 +64,40 @@ exports.webhookController = async (req, res) => {
 
       const validatedResponse = parsedResponse.map((response) => {
         return validateReviewResponse(response);
-      })
+      });
+
+      console.log("Validation done");
+
+      console.log("Formatting review...");
+      const formattedReview = formatReview(validatedResponse);
+
+      console.log("Formatted review:", formattedReview);
+
+      console.log("Posting GitHub comment...");
+      await createPullRequestComment(owner, repo, prNumber, formattedReview);
+
+      console.log("Comment posted successfully");
 
       res.status(200).json({
         success: true,
         message: "Webhook received successfully",
-        response: validatedResponse
+        response: formattedReview,
       });
-    }
-    else {
+    } else {
       res.status(200).json({
         success: true,
         message: "Webhook received successfully",
-        response: "Not a pull request event"
+        response: "Not a pull request event",
       });
     }
   } catch (err) {
-    console.log(err);
-    res.status(500).json({
-      success: false,
-      message: "Internal server error",
+    console.log("WEBHOOK ERROR:", err);
+    console.log("STATUS:", err.status);
+    console.log("MESSAGE:", err.message);
+    console.log("DATA:", err.response?.data);
+
+    return res.status(500).json({
+      message: "Internal Server Error",
     });
   }
 };

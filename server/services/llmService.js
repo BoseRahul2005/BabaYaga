@@ -5,6 +5,8 @@ exports.callLLM = async (prompt) => {
     apiKey: process.env.OPENROUTER_API_KEY,
   });
 
+  console.log("OpenRouter key exists:", !!process.env.OPENROUTER_API_KEY);
+
   try {
     const stream = await openrouter.chat.send({
       chatRequest: {
