@@ -83,6 +83,23 @@ exports.webhookController = async (req, res) => {
         message: "Webhook received successfully",
         response: formattedReview,
       });
+    } else if (event === "installation") {
+      console.log("Installation event received!");
+      console.log(req.body.installation);
+      if (action === "created") console.log(action);
+      if (action === "deleted") console.log(action);
+    } else if (event === "installation_repositories") {
+      console.log("Installation repositories event received!");
+      console.log(req.body.installation);
+      if (action === "added") {
+        console.log(action);
+        console.log(req.body.repositories_added);
+      }
+
+      if (action === "removed") {
+        console.log(action);
+        console.log(req.body.repositories_removed);
+      }
     } else {
       res.status(200).json({
         success: true,
