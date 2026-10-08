@@ -51,11 +51,16 @@ export default function LandingPage() {
         </nav>
 
         <div className="flex items-center gap-3">
-          <SignInButton mode="modal">
-            <button className="text-sm font-semibold text-slate-300 hover:text-white px-4 py-2 rounded-lg hover:bg-white/5 transition-all cursor-pointer">
-              Sign In
-            </button>
-          </SignInButton>
+          <Show when="signed-out">
+            <SignInButton mode="modal">
+              <button className="text-sm font-semibold text-slate-300 hover:text-white px-4 py-2 rounded-lg hover:bg-white/5 transition-all cursor-pointer">
+                Sign In
+              </button>
+            </SignInButton>
+          </Show>
+          <Show when="signed-in">
+            <UserButton />
+          </Show>
           <button
             onClick={() => navigate("/manual-review")}
             className="flex items-center gap-2 text-sm font-semibold text-white bg-linear-to-r from-indigo-600 to-purple-600 hover:from-indigo-500 hover:to-purple-500 px-4 py-2 rounded-xl shadow-lg shadow-indigo-500/25 hover:shadow-indigo-500/40 hover:-translate-y-0.5 active:translate-y-0 transition-all cursor-pointer"
