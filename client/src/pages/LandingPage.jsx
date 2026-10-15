@@ -14,11 +14,31 @@ import {
   Layers,
   Sparkles,
 } from "lucide-react";
-import { Show, SignInButton, SignUpButton, UserButton } from "@clerk/react";
+import {
+  Show,
+  SignInButton,
+  SignUpButton,
+  UserButton,
+  useAuth,
+} from "@clerk/react";
 import { useNavigate } from "react-router";
 
 export default function LandingPage() {
-  const navigate=useNavigate();
+  
+  const { getToken } = useAuth();
+  const fetchExternalData = async () => {
+    const token = await getToken();
+    const response = await fetch("http://localhost:3000/protected", {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+
+    const data = await response.json();
+    console.log(data);
+  };
+
+  const navigate = useNavigate();
   return (
     <div className="bg-[#060911] text-slate-50 min-h-screen font-sans selection:bg-indigo-500/30 selection:text-indigo-200">
       {/* Top Navbar */}
@@ -45,9 +65,12 @@ export default function LandingPage() {
           <a href="#security" className="hover:text-white transition-colors">
             Security
           </a>
-          <a href="#rules" className="hover:text-white transition-colors">
-            Custom Rules
-          </a>
+          <button
+            onClick={fetchExternalData}
+            className="hover:text-white transition-colors"
+          >
+            Test Authentication
+          </button>
         </nav>
 
         <div className="flex items-center gap-3">
