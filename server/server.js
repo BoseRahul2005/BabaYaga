@@ -4,6 +4,7 @@ const { clerkMiddleware, clerkClient, getAuth } = require("@clerk/express");
 const reviewRouter= require("./routes/reviewRoutes.js");
 const githubRouter= require("./routes/githubRoutes.js");
 const webhookRouter = require("./routes/githubWebhookRoutes.js");
+const clerkWebhookRouter = require("./routes/clerkWebhookRoutes.js");
 const connectDB= require("./config/db.js");
 const app = express();
 const cors = require('cors');
@@ -12,11 +13,13 @@ const port= process.env.PORT || 3000;
 connectDB();
 
 app.use(cors());
+app.use('/api/clerk',clerkWebhookRouter);
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json({verify: (req, res, buf) => {
         req.rawBody = buf;
     }}));
 app.use(clerkMiddleware());
+
 //API routes
 app.get('/',(req,res)=>{
     res.send('this is root page!');
