@@ -17,6 +17,10 @@ const ManualReviewPage = () => {
   const handleSetTab = (tab) => {
     if (tab === "landing") {
       navigate("/");
+    } else if (tab === "dashboard") {
+      navigate("/dashboard");
+    } else if (tab === "manual-review") {
+      navigate("/manual-review");
     }
   };
 

@@ -66,8 +66,14 @@ export default function LandingPage() {
             Security
           </a>
           <button
+            onClick={() => navigate("/dashboard")}
+            className="hover:text-white transition-colors cursor-pointer"
+          >
+            Dashboard
+          </button>
+          <button
             onClick={fetchExternalData}
-            className="hover:text-white transition-colors"
+            className="hover:text-white transition-colors cursor-pointer"
           >
             Test Authentication
           </button>
@@ -82,6 +88,12 @@ export default function LandingPage() {
             </SignInButton>
           </Show>
           <Show when="signed-in">
+            <button
+              onClick={() => navigate("/dashboard")}
+              className="text-sm font-semibold text-indigo-400 hover:text-indigo-300 px-3 py-1.5 rounded-lg border border-indigo-500/30 hover:bg-indigo-500/10 transition-all cursor-pointer"
+            >
+              Dashboard
+            </button>
             <UserButton />
           </Show>
           <button
@@ -200,7 +212,7 @@ export default function LandingPage() {
 
               <div className="flex gap-2">
                 <button
-                  onClick={() => setCurrentTab("reviews")}
+                  onClick={() => navigate("/dashboard")}
                   className="px-3.5 py-1.5 rounded-lg bg-indigo-600 hover:bg-indigo-500 text-white text-xs font-semibold shadow transition-all cursor-pointer"
                 >
                   View Full PR Review
