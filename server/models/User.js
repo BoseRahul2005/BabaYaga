@@ -5,7 +5,8 @@ const userSchema= new mongoose.Schema({
     githubUserId: {type: Number, default: null},
     username: {type: String},
     email: {type: String},
-    avatarUrl: {type: String}
+    avatarUrl: {type: String},
+    githubInstallationId: {type: Number, default: null}
 },{
     timestamps: true
 })

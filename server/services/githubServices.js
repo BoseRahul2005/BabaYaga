@@ -1,4 +1,4 @@
-const {octokit} = require("../config/github");
+const {octokit, app} = require("../config/github");
 const {filterFiles} = require("../utils/fileFilter");
 
 exports.getRepoInfo = async (owner, repo) => {
@@ -87,6 +87,19 @@ exports.createPullRequestComment= async(owner,repo,prNumber,body)=>{
             repo: repo,
             issue_number: prNumber,
             body: body
+        });
+        return response.data;
+    }
+    catch(err){
+        console.log(err);
+        throw err;
+    }
+}
+
+exports.getGitHubAppInstallation= async(installationId)=>{
+    try{
+        const response = await app.octokit.request("GET /app/installations/{installation_id}", {
+            installation_id: installationId
         });
         return response.data;
     }
