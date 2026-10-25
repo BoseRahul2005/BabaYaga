@@ -1,6 +1,7 @@
 import { useNavigate } from "react-router";
 import Sidebar from "../components/SidePanel";
 import SignInOverlay from "../components/auth/SignInOverlay";
+import { useAuth } from "@clerk/react";
 import {
   LayoutDashboard,
   FolderGit2,
@@ -8,9 +9,11 @@ import {
   CheckCircle2,
   Sparkles
 } from "lucide-react";
+import API from "../api/axios";
 
 const DashboardPage = () => {
   const navigate = useNavigate();
+  const {getToken} = useAuth();
 
   const handleSetTab = (tab) => {
     if (tab === "landing") {
@@ -22,8 +25,16 @@ const DashboardPage = () => {
     }
   };
 
-  const handleExternalNav=()=>{
-    window.location.href="https://github.com/apps/babayaga-ai-review/installations/new";
+  const handleConnectGithub= async ()=>{
+      const token = await getToken();
+      const response= await API.get('/github/start-oauth',{
+        headers:{
+          Authorization:`Bearer ${token}`,
+        },
+      })
+      
+      const URL= response.data.url;
+      window.location.href= URL;
   }
 
   return (
@@ -49,7 +60,7 @@ const DashboardPage = () => {
             </div>
 
             <button
-              onClick={() => handleExternalNav()}
+              onClick={() => handleConnectGithub()}
               className="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-linear-to-r from-indigo-600 to-purple-600 hover:from-indigo-500 hover:to-purple-500 text-white font-semibold text-xs shadow-lg shadow-indigo-500/25 transition-all cursor-pointer w-fit"
             >
               <FolderGit2 className="w-4 h-4" />

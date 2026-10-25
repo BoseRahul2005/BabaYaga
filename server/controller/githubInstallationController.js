@@ -66,6 +66,7 @@ const startGitHubOAuth= async(req,res)=>{
         if (!userId) {
             return res.status(401).json({success:false,message:"Unauthorized"});
         }
+        console.log(userId);
         const user= await User.findOne({clerkUserId: userId});
         if(!user){
             return res.status(404).json({success:false, message:"User not found"});
@@ -82,7 +83,7 @@ const startGitHubOAuth= async(req,res)=>{
         const client_id= process.env.GITHUB_OAUTH_CLIENT_ID;
         const redirect_uri= process.env.GITHUB_OAUTH_CALLBACK_URL;
         const authUrl= `https://github.com/login/oauth/authorize?client_id=${client_id}&redirect_uri=${redirect_uri}&scope=read:user&state=${state}`;
-        return res.redirect(authUrl);
+        return res.status(200).json({success:true, url:authUrl});
 
     }catch(err){
         console.log(err);
@@ -178,10 +179,7 @@ const handleGitHubOAuthCallback = async (req, res) => {
         user.githubUserId = githubUserId;
         await user.save();
 
-        return res.status(200).json({
-            success: true,
-            message: "GitHub account connected successfully"
-        });
+        return res.redirect(process.env.GITHUB_POST_CONNECT_REDIRECTION_PATH);
 
     } catch (err) {
         console.log(err);
